@@ -1,4 +1,12 @@
-Ce dépôt contient un ensemble de classes PHP permettant interagir avec la "console Free". L'objectif premier était pour moi de programmer des enregistrements récurrents fonction ayant disparu avec la nouvelle Freebox dite Révolution.
+Ce dépôt contient un ensemble de classes PHP permettant de piloter les différentes fonction de la "console d'administration Free". L'objectif premier était pour moi de programmer des enregistrements récurrents fonction ayant disparu avec la nouvelle Freebox dite Révolution.
+
+Etant, comme tout informaticien d'un tempérament flegmatique et n'ayant pas le courage de faire et refaire ce qui peut être fait qu'une seule fois, je me suis dit qu'il serait bien facile de piloter avec quelques lignes de code les enregistrements de ma Freebox, via la console d'administration de Free. Aussi, je me suis permis, via le fabuleux plugin "Firebug", les requêtes qui transitent entre mon navigateur et le serveur. L'objetif était de reproduire par script ce que j'arrivais à faire avec quelques clic souris.
+
+Ayant une petit expérience en programmation PHP et en particulier la conception objet, il était très facile pour moi d'exploiter quelques classes existantes pour l'envoi des requetes (CURL) et SimpleHtmlDom pour l'analyse du code HTML.
+
+Je vous présente donc un service minimum permettant de réaliser sur mesure vos enregistrement récurrents. Cependant, il me semble un peu difficile de créer un site Web permettant de partager ce service. En effet, les identifiants Free sont bien trop précieux pour que vous ayez le courage de me les confier. De même, il me semble tout à fait risqué d'utiliser des applications dont on ne dispose pas des sources, pour accéder à ces services. Pour éviter de gros soucis, Free devrait mettre en place 2 identifiants avec et sans droits.
+
+Ci-dessous, la liste des instructions permettant la mise en oeuvre des scripts. Des connaissances minimales en environnement Linux seront appréciables.
 
 Installation initiale :
  # sur configuration LInux/Ubuntu, Debian
