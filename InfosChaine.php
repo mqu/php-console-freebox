@@ -21,6 +21,15 @@ class InfoList {
 		}
 		return false;
 	}
+	
+	public function __toString(){
+		$txt = '';
+		foreach($this->list as $info){
+			$txt .= $info->__toString();
+		}
+		
+		return $txt;
+	}
 }
 class InfosChaine {
 	protected $info;
@@ -53,6 +62,18 @@ class InfosChaine {
 		}
 		return $this->info->service[0]->id;
 	}
+
+	public function __toString(){
+
+		$txt = sprintf("* %s [%d]\n", $this->name(), $this->id());
+		
+		foreach($this->info->service as $s){
+			$txt .= sprintf("  - [%d] - %s\n", $s->id, $s->desc);
+		}
+		
+		return $txt;
+	}
+
 }
 
 ?>

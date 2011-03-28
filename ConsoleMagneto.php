@@ -22,61 +22,35 @@ class ConsoleMagneto extends ConsoleFree{
 		}
 	}
 
-/*
-
-            <div class="table block">
-              <div class="content-title">LISTE DES ENREGISTREMENTS</div>
-              <div class="tr">
-                <table width="588" border="0" cellspacing="5" cellpadding="0" >
-                  <!--header fixe-->
-                  <tr>
-                    <td><strong>CANAL</strong></td>
-                    <td width="80"><strong>DATE</strong></td>
-                    <td width="60"><strong>HEURE</strong></td>
-                    <td width="60"><strong>DUREE</strong></td>
-                    <td width="10"></td>
-                    <td width="152"><strong>NOM</strong></td>
-                    <td width="31"></td>
-                    <td width="34"></td>
-                  <tr>
-                    <td height="1" colspan="8" bgcolor="#CCCCCC"></td>
-                  </tr>
-                  <!--//header fixe-->
-		  
-                
-                  <tr>
-                    <td colspan="8">&nbsp;</td>
-                  </tr>
-                  <form id="form_list_2" method="post" action="?id=208142&idt=6f323a94a52dd48b">
-                  <tr >
-                    <td><strong>France 2<br>France 2 (bas d�bit)</strong></td>
-                    <td width="80" ><strong>07/03/2011</strong></td>
-                    <td width="60" ><strong>20h00</strong></td>
-                    <td width="60" ><strong>35</strong>mn</td>
-                    <td width="10"><span title="Disque interne"><strong>(I)</strong></span></td>
-                    <td width="152"><strong>france2-journal</strong></td>
-		    <input type="hidden" name="ide"        value="2">
-		    <input type="hidden" name="chaine_id"  value="2">
-		    <input type="hidden" name="service_id" value="156">
-		    <input type="hidden" name="date"       value="07/03/2011">
-		    <input type="hidden" name="h"          value="20">
-		    <input type="hidden" name="min"        value="00">
-		    <input type="hidden" name="dur"        value="35">
-		    <input type="hidden" name="name"       value="france2-journal">
-		    <input type="hidden" name="where_id"   value="2">
-		    <input type="hidden" name="repeat_a"   value="">
-                    <td width="31">
-	              
-                    </td>
-                    <td width="34">
-                      <input type="submit" name="supp" value="Supprimer" alt="Supprimer" onClick="return confirm('Voulez vous vraiment supprimer cet enregistrement ?')"/>
-                    </td>
-                  </tr>
-
-*/
-
-
 	# url : https://adsl.free.fr/admin/magneto.pl?id=XXX&idt=YYYY&detail=0&box=0
+	/* retourne une liste d'enregistrements de cette forme :
+	 * Array
+		(
+			[form] => Array
+				(
+					[id] => form_list_91
+					[method] => post
+					[action] => ?id=208142&idt=8a5f63b100394643
+				)
+
+			[canal] => Array
+				(
+					[0] => France 3
+					[1] => France 3 (auto)
+				)
+
+			[date] => 28/03/2011
+			[heure] => 22h11
+			[duree] => 5
+			[nom] => test1
+			[ide] => 91
+			[chaine_id] => 3
+			[service_id] => 2863
+			[min] => 11
+			[where_id] => 2
+			[repeat_a] => 
+		)
+	*/
 	public function liste_enregistrements(){
 
 		$url = sprintf('https://adsl.free.fr/admin/magneto.pl?id=%s&idt=%s&detail=0&box=%s', 
@@ -91,57 +65,53 @@ class ConsoleMagneto extends ConsoleFree{
 
 		$list = $html->find('div[class=tr] table form');
 
+		$list_infos = array();
+		$names = array('canal', 'date', 'heure', 'duree', 'nom', 'nom');
+		$names_unset = array('name', 'h', 'dur');
+
 		foreach($list as $elem){
+
+			$infos = array();
+			$infos['form']['id'] = $elem->id;
+			$infos['form']['method'] = $elem->method;
+			$infos['form']['action'] = $elem->action;
+
+			$infos1 = $elem->find('td strong');
+			foreach($infos1 as $key=>$info)
+				$infos[$names[$key]] = $info->innertext;
+			
 			$list2 = $elem->find('input[type=hidden]');
-			printf("element : %s\n", $this->html_trim($elem->plaintext));
-			printf("  attr : %s\n", join(',', $elem->attr));
-			echo "-\n";
+
 			foreach($list2 as $elem2){
-				printf("element : %s\n", $this->html_trim($elem2->plaintext));
-				printf("  attr : %s\n", join(',', $elem2->attr));
+				if(isset($elem2->attr['name']))
+					$infos[$elem2->attr['name']] = $elem2->attr['value'];
 			}
-			echo "----\n\n";
+			
+			$infos['canal'] = explode('<br>', $infos['canal']);
+			$list_infos[] = $infos;
+			
+			# suppression des infos en double
+			foreach($names_unset as $k)
+				unset($infos[$k]);
+				
+			print_r($infos);
 		}
+		return $list_infos;
 	}
 	
 /*
- * programmer :	
+ * programmer :	permet de programmer un enregistrement
  * 
-	chaine	3
-	date	06/03/2011
-	duree	5
-	emission	test
-	heure	23
-	minutes	23
-	service	161
-	submit	PROGRAMMER L'ENREGISTREMENT
-	where_id	2
+	* spécifications temporelles : date, durée, heure, minutes
+	* emission : nom du fichier d'enregistrement,
+	* service : identifiant numérique spécifiant le canal de diffusion ; valeur possible $info->chaine('France 2')->services_default_id('.*auto.*')
+	* chaine : identificant de la chaine ; valeur possible $info->chaine('France 2')->id()
+	* where_id : identifiant du media-player (espace de stockage disque)
+	* champs supplémentaire supposé : 
+	*   - repeat_a (liste des jours de la semaine ou l'enregistrement doit avoir lieu
+	*   - sur Freebox V5 : <input type="checkbox" name="period" value="1" id="period_1" -> Lundi
 
-
-	chaine	5
-	date	07/03/2011
-	duree	10
-	emission	test
-	heure	22
-	minutes	13
-	service	167
-	submit	PROGRAMMER L'ENREGISTREMENT
-	where_id	2
-
-
-retour d'erreur : 
-	    <div class="table block">
-              <div class="content-title">Des erreurs sont survenues :</div>
-              <div class="tr">
-                <table width="584">
-                  <tr>
-                    <td width="85"><strong><span style="color: #cc0000">Date dans le passé</span></strong></td>
-		         </tr>
-		       </table>
-	      </div>
-
-        </div>
-
+	* 
 */
 
 	public function programmer($args=array()){
@@ -168,7 +138,7 @@ retour d'erreur :
 	}
 	
 	# url : https://adsl.free.fr/admin/magneto.pl?id=XXX&idt=YYYY&detail=0&box=0
-	# listes les BOXes : les boitiers multi-media ; il peut y avoir plusieurs boitier dans le meme domicile
+	# listes les BOXes : les boitiers multi-media ; il peut y avoir plusieurs boitiers dans le même domicile
 	public function liste_boxes(){
 
 		$url = sprintf('https://adsl.free.fr/admin/magneto.pl?id=%s&idt=%s&detail=0&box=%s', 
@@ -198,12 +168,7 @@ retour d'erreur :
 		return $boxes;
 	}	
 	
-	# url : https://adsl.free.fr/admin/magneto.pl?id=XXX&idt=YYYY&detail=1
-	public function details(){
 
-		return $this->details_url();
-	}
-	
 	# retourne un enregistrement contenant des infos sur les disques et espaces disponibles
 	#
 	public function infos_disks(){
@@ -219,6 +184,11 @@ retour d'erreur :
 		# var serv_a = [{"name":"TF1","id":1,"service":[{"pvr_mode":"public","desc":"TF1 (TNT)","id":847},{"pvr_mode":"private","desc":"TF1 (HD)","id":150},...
 		if(preg_match('#var serv_a = (.*);#', $this->details_url(), $values)){
 			$infos = json_decode(utf8_decode($values[1]));
+			if($infos === NULL)
+				throw new Exception(sprintf("Magneto : erreur décodage infos chaines (%d)", json_last_error()));
+				
+			# print_r($infos);
+			
 			$list = new InfoList();
 
 			foreach($infos as $info){
@@ -232,6 +202,8 @@ retour d'erreur :
 	}
 	
 	# url : https://adsl.free.fr/admin/magneto.pl?id=XXX&idt=YYYY&detail=1
+	# retourne en format JSON, la listes des chaines, des ID de diffusion par qualité d'enregistrement
+	# un cache permet d'éviter de récupérer en double sur le serveur
 	private function details_url(){
 
 		if($this->data['details'] == null){
@@ -249,12 +221,12 @@ retour d'erreur :
 	public function supprimer(){
 	}
 
-        function html_trim($str){
-                $str = html_entity_decode($str, ENT_COMPAT, 'ISO-8859-15');
-                $str = preg_replace('#[\xA0 \n\r\t]+#', ' ', $str);
+	function html_trim($str){
+		$str = html_entity_decode($str, ENT_COMPAT, 'ISO-8859-15');
+		$str = preg_replace('#[\xA0 \n\r\t]+#', ' ', $str);
 
-                return trim($str);
-        }
+		return trim($str);
+	}
 
 }
 
