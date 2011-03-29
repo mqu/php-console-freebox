@@ -23,7 +23,7 @@ $args = array(
 	'emission'	=> 'F2 - journal - 12h',
 	'heure'     => 12,
 	'minutes'   => 57,
-	'service'	=> $chaine->services_default_id('.*auto.*'),
+	'service'	=> $chaine->services_id('.*auto.*'),
 	'where_id'  => 2       # disque dur local de la freebox
 );
 
@@ -36,7 +36,7 @@ $args = array(
 	'emission'	=> 'F2 - journal - 20h',
 	'heure'     => 19,
 	'minutes'   => 57,
-	'service'	=> $chaine->services_default_id('.*auto.*'),
+	'service'	=> $chaine->services_id('.*auto.*'),
 	'where_id'  => 2       # disque dur local de la freebox
 );
 

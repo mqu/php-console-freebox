@@ -104,7 +104,7 @@ class ConsoleMagneto extends ConsoleFree{
  * 
 	* spécifications temporelles : date, durée, heure, minutes
 	* emission : nom du fichier d'enregistrement,
-	* service : identifiant numérique spécifiant le canal de diffusion ; valeur possible $info->chaine('France 2')->services_default_id('.*auto.*')
+	* service : identifiant numérique spécifiant le canal de diffusion ; valeur possible $info->chaine('France 2')->services_id('.*auto.*')
 	* chaine : identificant de la chaine ; valeur possible $info->chaine('France 2')->id()
 	* where_id : identifiant du media-player (espace de stockage disque)
 	* champs supplémentaire supposé : 

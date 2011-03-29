@@ -29,7 +29,7 @@ foreach($infos as $info){
 }
 
 $chaine = $list->find_by_name('France 2');
-$id = $chaine->services_default_id('.*auto.*');
+$id = $chaine->services_id('.*auto.*');
 
 print_r($chaine);
 printf("id = $id\n");
