@@ -26,10 +26,7 @@ $infos = $magneto->liste_enregistrements();
             [ide] => 92
             [chaine_id] => 5
             [service_id] => 2868
-            [h] => 23
             [min] => 20
-            [dur] => 3
-            [name] => test2
             [where_id] => 2
             [repeat_a] => 
 */

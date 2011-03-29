@@ -186,9 +186,7 @@ class ConsoleMagneto extends ConsoleFree{
 			$infos = json_decode(utf8_decode($values[1]));
 			if($infos === NULL)
 				throw new Exception(sprintf("Magneto : erreur décodage infos chaines (%d)", json_last_error()));
-				
-			# print_r($infos);
-			
+
 			$list = new InfoList();
 
 			foreach($infos as $info){
