@@ -1,5 +1,6 @@
 <?php
 
+# collection d'éléments de type InfosChaine
 class InfoList {
 	protected $list = array();
 	
@@ -31,6 +32,8 @@ class InfoList {
 		return $txt;
 	}
 }
+
+# class d'abstraction des informations liées aux chaines (id, name, service_id)
 class InfosChaine {
 	protected $info;
 	
