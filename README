@@ -25,7 +25,7 @@ Utilisation :
 
  # renommer et éditer le fichier de configuration
  # vous devez ajuster "login" et "passwd" a votre compte
- mv config-default.php config.php
+ cp config-default.php config.php ; cp sample-free-console-enregistrer.php free-console-enregistrer.php
  vi config.php
 
  # programmer un enregistrement
@@ -36,3 +36,7 @@ Utilisation :
 
 Exemple de fichier crontab :
 10 0 * * *	(cd $HOME/extra/console-free ; /usr/bin/php5 -q free-console-enregistrer.php > /tmp/free-console-enregistrer.log)
+
+
+# mettre a jour vos sources ; bien veiller a ne pas modifier les sources intégrés au dépot GIT, mais copier ceux que vous souhaitez modifier (sample*).
+git pull
