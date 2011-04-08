@@ -4,6 +4,9 @@ require_once('simplehtmldom.php');
 require_once('InfosChaine.php');
 require_once('ConsoleFree.php');
 
+require_once('Enregistrement.php');
+require_once('EnregistrementFreebox.php');
+
 class ConsoleMagneto extends ConsoleFree{
 
 	protected $opts = array(
@@ -88,13 +91,13 @@ class ConsoleMagneto extends ConsoleFree{
 			}
 			
 			$infos['canal'] = explode('<br>', $infos['canal']);
-			$list_infos[] = $infos;
 			
 			# suppression des infos en double
 			foreach($names_unset as $k)
 				unset($infos[$k]);
-				
-			print_r($infos);
+	
+			$list_infos[] = new EnregistrementFreebox($infos);
+
 		}
 		return $list_infos;
 	}
@@ -115,16 +118,30 @@ class ConsoleMagneto extends ConsoleFree{
 */
 
 	public function programmer($args=array()){
-		if(!isset($args['submit']))
+		
+		if(is_array($args)){
+			if(!isset($args['submit']))
+				$args['submit'] = "PROGRAMMER L'ENREGISTREMENT";
+				
+			if(!isset($args['where_id']))  # disque dur par défaut (internal-disk : "/Disque dur/Enregistrements")
+				$args['where_id'] = 2;
+
+		} else {
+			$enreg = $args;
+			$args = array();
+			$list = array('date', 'heure', 'minutes', 'duree', 'chaine', 'service', 'where_id', 'emission');
+			foreach($list as $k)
+				$args[$k] = $enreg->$k;
+
 			$args['submit'] = "PROGRAMMER L'ENREGISTREMENT";
-			
-		if(!isset($args['where_id']))  # disque dur par défaut (internal-disk : "/Disque dur/Enregistrements")
-			$args['where_id'] = 2;
-			
+		}
+		
 		$url = sprintf('https://adsl.free.fr/admin/magneto.pl?id=%s&idt=%s', 
 			$this->id(),
 			$this->idt());
+
 		$data = $this->curl->post($url, $args);
+
 		if(preg_match('#Des erreurs sont survenues :#', $data)){
 			$html = new simple_html_dom($data);
 			$list = $html->find('div div[class=tr] strong span[style=]');
