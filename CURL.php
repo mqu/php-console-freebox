@@ -13,7 +13,7 @@ class CURL {
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_HEADER, 1);
 		curl_setopt($ch, CURLOPT_USERAGENT, $this->user_agent);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+		if(ini_get('safe_mode')!=true) curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
 		# curl_setopt($ch,CURLOPT_WRITEFUNCTION, array($this, "write_function"));
@@ -22,8 +22,8 @@ class CURL {
 
 		# curl_setopt($ch, CURLOPT_VERBOSE, true); verbose mode
 
-		curl_setopt($ch, CURLOPT_COOKIEJAR, 'cookie.txt');
-		curl_setopt($ch, CURLOPT_COOKIEFILE, 'cookie.txt');
+		if(ini_get('safe_mode')!=true) curl_setopt($ch, CURLOPT_COOKIEJAR, 'cookie.txt');
+		if(ini_get('safe_mode')!=true) curl_setopt($ch, CURLOPT_COOKIEFILE, 'cookie.txt');
 
 		if ($method == 'POST') {
 			curl_setopt($ch, CURLOPT_POST, 1);
