@@ -233,7 +233,37 @@ class ConsoleMagneto extends ConsoleFree{
 		return $this->data['details'];
 	}
 
-	public function supprimer(){
+	/* 
+	 args :
+		chaine_id	2
+		date	08/04/2011
+		dur	5
+		h	23
+		ide	128
+		min	30
+		name	test
+		repeat_a	
+		service_id	686
+		supp	Supprimer
+		where_id	2
+	*/
+
+	public function supprimer($id){
+
+		$url = sprintf('https://adsl.free.fr/admin/magneto.pl?id=%s&idt=%s', 
+			$this->id(),
+			$this->idt());
+		
+		if(!isset($args['supp']))
+			$args['supp'] = "Supprimer";
+		$args['ide'] = $id;
+
+		$data = $this->curl->post($url, $args);
+		
+		if(preg_match("#Pas d'enregistrement programm#", $data))
+			return false;
+		else
+			return true;
 	}
 
 	function html_trim($str){

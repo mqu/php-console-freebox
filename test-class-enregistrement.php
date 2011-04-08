@@ -6,6 +6,7 @@ require_once('config.php');
 require_once('InfosChaine.php');
 require_once('ConsoleMagneto.php');
 require_once('Enregistrement.php');
+require_once('EnregistrementFreebox.php');
 
 $magneto = new ConsoleMagneto();
 $magneto->login($config['user'], $config['passwd']);
@@ -21,7 +22,7 @@ $args = array(
 	'duree'	    => 5,
 	'emission'	=> 'test',
 	'heure'     => 23,
-	'minutes'   => 30,
+	'minutes'   => 45,
 	
 	# récurrence de l'enregistrement.
 	# 'repeat'    => array(1,2,3,4,5,6,7)
