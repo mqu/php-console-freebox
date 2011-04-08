@@ -25,7 +25,7 @@ Utilisation :
 
  # renommer et éditer le fichier de configuration
  # vous devez ajuster "login" et "passwd" a votre compte
- mv config-default.php config.php
+ cp config-default.php config.php ; cp sample-free-console-enregistrer.php free-console-enregistrer.php
  vi config.php
 
  # programmer un enregistrement
