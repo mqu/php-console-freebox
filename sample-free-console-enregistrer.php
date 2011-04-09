@@ -6,6 +6,9 @@ require_once('config.php');
 require_once('InfosChaine.php');
 require_once('ConsoleMagneto.php');
 
+require_once('Enregistrement.php');
+require_once('EnregistrementFreebox.php');
+
 $magneto = new ConsoleMagneto();
 $magneto->login($config['user'], $config['passwd']);
 
@@ -15,31 +18,22 @@ $chaine = $infos->find_by_name('France 2');
 # $date = '12/03/2011';
 $date = date('d/m/Y');
 
+$enreg = new Enregistrement();
+$enreg->date    = $date;
+$enreg->heure   = 19;
+$enreg->minutes = 57;
+$enreg->duree   = 36;
 
-$args = array(
-'chaine' => $chaine->id(),
-'date' => $date,
-'duree' => 36,
-'emission' => 'F2 - journal - 12h',
-'heure' => 12,
-'minutes' => 57,
-'service' => $chaine->services_id('.*auto.*'),
-'where_id' => 2 # disque dur local de la freebox
-);
+$enreg->chaine = $chaine;
+$enreg->emission = 'F2 - journal - 20h -test';
+$enreg->date = $date;
 
-$magneto->programmer($args);
+# lancer l'enregistrement.
+$magneto->programmer($enreg);
 
-$args = array(
-'chaine' => $chaine->id(),
-'date' => $date,
-'duree' => 36,
-'emission' => 'F2 - journal - 20h',
-'heure' => 19,
-'minutes' => 57,
-'service' => $chaine->services_id('.*auto.*'),
-'where_id' => 2 # disque dur local de la freebox
-);
-
-$magneto->programmer($args);
+# lister les enregistrements
+$liste = $magneto->liste_enregistrements();
+foreach($liste as $enreg)
+	echo $enreg;
 
 ?>

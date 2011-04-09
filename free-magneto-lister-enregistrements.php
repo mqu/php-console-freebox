@@ -13,10 +13,7 @@ require_once('EnregistrementFreebox.php');
 $magneto = new ConsoleMagneto();
 $magneto->login($config['user'], $config['passwd']);
 
-$liste = $magneto->liste_enregistrements();
-
-foreach($liste as $enreg)
+foreach($magneto->lister() as $enreg)
 	echo $enreg;
-
 
 ?>

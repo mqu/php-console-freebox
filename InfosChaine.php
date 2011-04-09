@@ -57,7 +57,7 @@ class InfosChaine {
 	}
 	
 	# possible values : auto, standart, TNT, HD.*TNT, HD, bas.*d.*bit (bas débit)
-	public function services_id($expr = '.*auto.*'){
+	public function service_id($expr = '.*auto.*'){
 		$list = array();
 		foreach($this->info->service as $s){
 			if(preg_match("#$expr#", $s->desc))

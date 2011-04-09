@@ -14,7 +14,8 @@ class ConsoleMagneto extends ConsoleFree{
 	);
 	
 	protected $data = array(
-		'details' => null
+		'details' => null,
+		'chaines' => null
 	);
 
 	public function __construct($opts = array()){
@@ -25,36 +26,12 @@ class ConsoleMagneto extends ConsoleFree{
 		}
 	}
 
-	# url : https://adsl.free.fr/admin/magneto.pl?id=XXX&idt=YYYY&detail=0&box=0
-	/* retourne une liste d'enregistrements de cette forme :
-	 * Array
-		(
-			[form] => Array
-				(
-					[id] => form_list_91
-					[method] => post
-					[action] => ?id=208142&idt=8a5f63b100394643
-				)
 
-			[canal] => Array
-				(
-					[0] => France 3
-					[1] => France 3 (auto)
-				)
-
-			[date] => 28/03/2011
-			[heure] => 22h11
-			[duree] => 5
-			[nom] => test1
-			[ide] => 91
-			[chaine_id] => 3
-			[service_id] => 2863
-			[min] => 11
-			[where_id] => 2
-			[repeat_a] => 
-		)
+	/*
+	 * retourne une liste d'enregistrements de classe EnregistrementFreebox
+	 *
 	*/
-	public function liste_enregistrements(){
+	public function lister(){
 
 		$url = sprintf('https://adsl.free.fr/admin/magneto.pl?id=%s&idt=%s&detail=0&box=%s', 
 			$this->id(),
@@ -107,35 +84,29 @@ class ConsoleMagneto extends ConsoleFree{
  * 
 	* spécifications temporelles : date, durée, heure, minutes
 	* emission : nom du fichier d'enregistrement,
-	* service : identifiant numérique spécifiant le canal de diffusion ; valeur possible $info->chaine('France 2')->services_id('.*auto.*')
+	* service : identifiant numérique spécifiant le canal de diffusion ; valeur possible $info->chaine('France 2')->service_id('.*auto.*')
 	* chaine : identificant de la chaine ; valeur possible $info->chaine('France 2')->id()
 	* where_id : identifiant du media-player (espace de stockage disque)
 	* champs supplémentaire supposé : 
 	*   - repeat_a (liste des jours de la semaine ou l'enregistrement doit avoir lieu
 	*   - sur Freebox V5 : <input type="checkbox" name="period" value="1" id="period_1" -> Lundi
 
-	* 
 */
 
-	public function programmer($args=array()){
-		
-		if(is_array($args)){
-			if(!isset($args['submit']))
-				$args['submit'] = "PROGRAMMER L'ENREGISTREMENT";
-				
-			if(!isset($args['where_id']))  # disque dur par défaut (internal-disk : "/Disque dur/Enregistrements")
-				$args['where_id'] = 2;
+	public function programmer($enreg){
 
-		} else {
-			$enreg = $args;
-			$args = array();
-			$list = array('date', 'heure', 'minutes', 'duree', 'chaine', 'service', 'where_id', 'emission');
-			foreach($list as $k)
-				$args[$k] = $enreg->$k;
+		$infos = $this->infos_chaines();
+		$chaine = $infos->find_by_name($enreg->chaine);
 
-			$args['submit'] = "PROGRAMMER L'ENREGISTREMENT";
-		}
-		
+		$args = array();
+		$list = array('date', 'heure', 'minutes', 'duree', 'where_id', 'emission');
+		foreach($list as $k)
+			$args[$k] = $enreg->$k;
+
+		$args['submit']  = "PROGRAMMER L'ENREGISTREMENT";
+		$args['chaine']  = $chaine->id();
+		$args['service'] = $chaine->service_id(sprintf('.*%s.*', $enreg->qualite));
+
 		$url = sprintf('https://adsl.free.fr/admin/magneto.pl?id=%s&idt=%s', 
 			$this->id(),
 			$this->idt());
@@ -196,8 +167,14 @@ class ConsoleMagneto extends ConsoleFree{
 			throw new Exception("Magneto : pas d'info sur l'espace disque");
 	}
 	
-	# listes des chaines supportées, id
+	# listes des chaines supportées.
+	# les caractères accentués posent problème et sont mal décodés. Il est possible de les remplacer par des expression régulière (.*)
+	#
 	public function infos_chaines(){
+		
+		if($this->data['chaines'] != null)
+			return $this->data['chaines'];
+	
 		# var serv_a = [{"name":"TF1","id":1,"service":[{"pvr_mode":"public","desc":"TF1 (TNT)","id":847},{"pvr_mode":"private","desc":"TF1 (HD)","id":150},...
 		if(preg_match('#var serv_a = (.*);#', $this->details_url(), $values)){
 			$infos = json_decode(utf8_decode($values[1]));
@@ -210,6 +187,7 @@ class ConsoleMagneto extends ConsoleFree{
 				$list->add(new InfosChaine($info));
 			}
 
+			$this->data['chaines'] = $list;
 			return $list;
 
 		} else
@@ -234,18 +212,7 @@ class ConsoleMagneto extends ConsoleFree{
 	}
 
 	/* 
-	 args :
-		chaine_id	2
-		date	08/04/2011
-		dur	5
-		h	23
-		ide	128
-		min	30
-		name	test
-		repeat_a	
-		service_id	686
-		supp	Supprimer
-		where_id	2
+		- suppression d'un enregistrement programmé
 	*/
 
 	public function supprimer($id){
@@ -265,8 +232,21 @@ class ConsoleMagneto extends ConsoleFree{
 		else
 			return true;
 	}
+	
+	/*
+	 * suppression d'enregistrements ; basé sur une expression régulière : 
+	 *  ex: expr = .*test.*
+	 *
+	 */
+	public function supprimer_expr($expr){
+		$list = $this->lister();
+		foreach($list as $enreg){
+			if(preg_match("#$expr#", $enreg))
+				$this->supprimer($enreg->ide);
+		}
+	}
 
-	function html_trim($str){
+	protected function html_trim($str){
 		$str = html_entity_decode($str, ENT_COMPAT, 'ISO-8859-15');
 		$str = preg_replace('#[\xA0 \n\r\t]+#', ' ', $str);
 
