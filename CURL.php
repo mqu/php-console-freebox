@@ -1,13 +1,8 @@
 <?php
 
 class CURL {
-	protected $callback = null;
 	protected $user_agent = 'lynx';
 
-	function setCallback($func_name) {
-		$this->callback = $func_name;
-	}
-	
 	function doRequest($method, $url, $vars) {
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
@@ -15,10 +10,6 @@ class CURL {
 		curl_setopt($ch, CURLOPT_USERAGENT, $this->user_agent);
 		if(ini_get('safe_mode')!=true) curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
-		# curl_setopt($ch,CURLOPT_WRITEFUNCTION, array($this, "write_function"));
-		# curl_setopt($ch,CURLOPT_READFUNCTION, array($this, "read_function"));
-		# curl_setopt($ch,CURLOPT_PROGRESSFUNCTION, array($this, "curl_progress_func"));
 
 		# curl_setopt($ch, CURLOPT_VERBOSE, true); verbose mode
 
@@ -51,20 +42,6 @@ class CURL {
 	
 	public function post($url, $vars) {
 		return $this->doRequest('POST', $url, $vars);
-	}
-
-	public function write_function($ch, $string){
-		echo "write function\n";
-		return strlen($string);
-	}
-
-	public function read_function($ch, $string){
-		echo "read function\n";
-		return strlen($string);
-	}
-
-	public function curl_progress_func($fp, $dltotal, $dlnow, $ultotal, $ulnow){
-		echo "curl_progress_func()\n";
 	}
 }
 

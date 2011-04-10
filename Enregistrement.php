@@ -13,9 +13,7 @@ class Enregistrement {
 		'where_id'  => 2,
 		'emission'  => null
 	);
-	
-	protected $chaine = null;
-	
+
 	public function __construct(){
 	}
 
@@ -39,9 +37,6 @@ class Enregistrement {
     }
 
     public function __get($name) {
-		if($name == 'chaine'){
-			return $this->chaine;
-		}
 
         if (array_key_exists($name, $this->args)) {
             return $this->args[$name];

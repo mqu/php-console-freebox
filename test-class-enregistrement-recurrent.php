@@ -9,7 +9,6 @@ require_once('ConsoleMagneto.php');
 require_once('Date.php');
 require_once('EnregistrementRecurrent.php');
 
-
 # $date = '12/03/2011';
 $date = Date::today();
 
