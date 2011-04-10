@@ -6,32 +6,27 @@ require_once('config.php');
 require_once('InfosChaine.php');
 require_once('ConsoleMagneto.php');
 
-require_once('Enregistrement.php');
-require_once('EnregistrementFreebox.php');
+require_once('Date.php');
+require_once('EnregistrementRecurrent.php');
 
-$magneto = new ConsoleMagneto();
-$magneto->login($config['user'], $config['passwd']);
 
 # $date = '12/03/2011';
-$date = date('d/m/Y');
+$date = Date::today();
 
-$enreg = new Enregistrement();
+$enreg = new EnregistrementRecurrent();
 $enreg->date    = $date;
 $enreg->heure   = 19;
 $enreg->minutes = 57;
 $enreg->duree   = 36;
 
-# $enreg->repeat   = array(1,2,3);
+# répetition : 0: dimanche, 1:lundi, ...
+$enreg->repeat   = array(0,2);
 
 $enreg->chaine   = 'France 2';
 $enreg->qualite  = 'standard';   # auto, standard, bas-débit, auto, TNT, TNT-HD
 $enreg->emission = 'F2 - journal - 20h -test';
 
-# lancer l'enregistrement.
-$magneto->programmer($enreg);
-
-# lister les enregistrements
-foreach($magneto->lister() as $enreg)
-	echo $enreg;
+foreach ($enreg->repeat($count=30) as $event)
+	echo $event;
 
 ?>

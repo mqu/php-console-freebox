@@ -11,9 +11,7 @@ class Enregistrement {
 		'service'   => null,
 
 		'where_id'  => 2,
-		'emission'  => null,
-		
-		'repeat'   => array()
+		'emission'  => null
 	);
 	
 	protected $chaine = null;
@@ -22,14 +20,13 @@ class Enregistrement {
 	}
 
 	public function __toString(){
-		return sprintf("%s - %s %d:%d (%dmn) - %s (%s)\n", 
-			$this->args['chaine'], 
-			$this->args['date'], 
-			$this->args['heure'], 
-			$this->args['minutes'], 
-			$this->args['duree'], 
-			$this->args['emission'],
-			join(', ', $this->args['repeat']));
+		return sprintf("%s - %s %d:%d (%dmn) - %s\n", 
+			$this->chaine, 
+			$this->date, 
+			$this->heure, 
+			$this->minutes, 
+			$this->duree, 
+			$this->emission);
 	}
 
     public function __set($name, $value) {
