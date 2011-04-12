@@ -40,3 +40,6 @@ Exemple de fichier crontab :
 
 # mettre a jour vos sources ; bien veiller a ne pas modifier les sources intégrés au dépot GIT, mais copier ceux que vous souhaitez modifier (sample*).
 git pull
+
+# si vous avez apporté de menues modifications sur vos sources :
+git pull --rebase
