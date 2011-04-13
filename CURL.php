@@ -23,14 +23,7 @@ class CURL {
 		$data = curl_exec($ch);
 		curl_close($ch);
 		if ($data) {
-			if ($this->callback != null)
-			{
-				$callback = $this->callback;
-				$this->callback = false;
-				return call_user_func($callback, $data);
-			} else {
-				return $data;
-			}
+			return $data;
 		} else {
 			return curl_error($ch);
 		}
