@@ -15,7 +15,7 @@ Installation initiale :
 
 Utilisation :
  # récupérer les sources avec la commande git :
- git checkout git@github.com:mqu/php-console-freebox.git
+git clone http://github.com/mqu/php-console-freebox.git
 
  # se placer dans le répertoire source :
  cd php-console-freebox
