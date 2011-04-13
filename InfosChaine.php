@@ -31,6 +31,24 @@ class InfoList {
 		
 		return $txt;
 	}
+
+	/*
+
+		<select name="chaine">
+		<option>TF1</option>
+		<option selected="true">France 2</option>
+		<option>France 3</option>
+		</select>
+	*/
+
+	public function to_html_select($default=null, $name="chaine", $id="chaine"){
+		$txt = "<select size='5' name='$name'\n";
+		foreach($this->list as $info){
+			$txt .= sprintf('<option value="%s">%s</option>' . "\n", $info->id(), $info->name());
+		}
+		$txt .= "</select>";
+		return $txt;
+	}
 }
 
 # class d'abstraction des informations liées aux chaines (id, name, service_id)

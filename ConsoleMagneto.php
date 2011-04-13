@@ -7,6 +7,8 @@ require_once('ConsoleFree.php');
 require_once('Enregistrement.php');
 require_once('EnregistrementFreebox.php');
 
+class SessionException extends Exception{}
+
 class ConsoleMagneto extends ConsoleFree{
 
 	protected $opts = array(
@@ -95,8 +97,6 @@ class ConsoleMagneto extends ConsoleFree{
 
 	public function programmer($enreg){
 
-		$infos = $this->infos_chaines();
-		$chaine = $infos->find_by_name($enreg->chaine);
 
 		$args = array();
 		$list = array('date', 'heure', 'minutes', 'duree', 'where_id', 'emission');
@@ -104,8 +104,18 @@ class ConsoleMagneto extends ConsoleFree{
 			$args[$k] = $enreg->$k;
 
 		$args['submit']  = "PROGRAMMER L'ENREGISTREMENT";
-		$args['chaine']  = $chaine->id();
-		$args['service'] = $chaine->service_id(sprintf('.*%s.*', $enreg->qualite));
+		
+		# si l'enregistrement provient d'un formulaire HTML, chaine et service ont déja la bonne valeur.
+		if($enreg->service != null){
+			$args['chaine'] = $enreg->chaine;
+			$args['service'] = $enreg->service;
+		} else{
+			$infos = $this->infos_chaines();
+			$chaine = $infos->find_by_name($enreg->chaine);
+			
+			$args['chaine']  = $chaine->id();
+			$args['service'] = $chaine->service_id(sprintf('.*%s.*', $enreg->qualite));
+		}
 
 		$url = sprintf('https://adsl.free.fr/admin/magneto.pl?id=%s&idt=%s', 
 			$this->id(),
@@ -261,7 +271,7 @@ class ConsoleMagneto extends ConsoleFree{
 		$expr = 'Votre session a expiré';
 		if(stripos(utf8_encode($data), $expr)!== false){
 			file_put_contents(sprintf('var/session-timeout-%s-log.html', time()), $data);
-			throw new Exception("session timeout");
+			throw new SessionException("session timeout");
 		}
 		return false;
 	}
