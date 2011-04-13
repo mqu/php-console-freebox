@@ -26,7 +26,6 @@ class ConsoleMagneto extends ConsoleFree{
 		}
 	}
 
-
 	/*
 	 * retourne une liste d'enregistrements de classe EnregistrementFreebox
 	 *
@@ -40,6 +39,7 @@ class ConsoleMagneto extends ConsoleFree{
 		);
 
 		$data = $this->curl->get($url);
+		$this->check_timeout($data);
 
 		$html = new simple_html_dom($data);
 
@@ -112,6 +112,7 @@ class ConsoleMagneto extends ConsoleFree{
 			$this->idt());
 
 		$data = $this->curl->post($url, $args);
+		$this->check_timeout($data);
 
 		if(preg_match('#Des erreurs sont survenues :#', $data)){
 			$html = new simple_html_dom($data);
@@ -136,6 +137,7 @@ class ConsoleMagneto extends ConsoleFree{
 		);
 
 		$data = $this->curl->get($url);
+		$this->check_timeout($data);
 
 		$html = new simple_html_dom($data);
 
@@ -198,14 +200,15 @@ class ConsoleMagneto extends ConsoleFree{
 	# retourne en format JSON, la listes des chaines, des ID de diffusion par qualité d'enregistrement
 	# un cache permet d'éviter de récupérer en double sur le serveur
 	private function details_url(){
-
+		printf("ConsoleMagneto::detail_url()\n");
 		if($this->data['details'] == null){
 			$url = sprintf('https://adsl.free.fr/admin/magneto.pl?id=%s&idt=%s&detail=1', 
 				$this->id(),
 				$this->idt()
 			);
-
+			printf("ConsoleMagneto::detail_url($url)\n");
 			$this->data['details'] = $this->curl->get($url);
+			$this->check_timeout($this->data['details']);
 		}
 		
 		return $this->data['details'];
@@ -226,6 +229,7 @@ class ConsoleMagneto extends ConsoleFree{
 		$args['ide'] = $id;
 
 		$data = $this->curl->post($url, $args);
+		$this->check_timeout($data);
 		
 		if(preg_match("#Pas d'enregistrement programm#", $data))
 			return false;
@@ -251,6 +255,15 @@ class ConsoleMagneto extends ConsoleFree{
 		$str = preg_replace('#[\xA0 \n\r\t]+#', ' ', $str);
 
 		return trim($str);
+	}
+	
+	protected function check_timeout($data){
+		$expr = 'Votre session a expiré';
+		if(stripos(utf8_encode($data), $expr)!== false){
+			file_put_contents(sprintf('var/session-timeout-%s-log.html', time()), $data);
+			throw new Exception("session timeout");
+		}
+		return false;
 	}
 
 }

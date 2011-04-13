@@ -4,22 +4,12 @@ require_once('Date.php');
 require_once('Enregistrement.php');
 
 class EnregistrementRecurrent extends Enregistrement{
-	
-	protected $chaine = null;
-	
+
+	# protected $this->args['repeat'] = array();
+
 	public function __construct(){
 		parent::__construct();
 		$this->args['repeat'] = array();
-	}
-
-	public function __toString(){
-		return sprintf("%s - %s %d:%d (%dmn) - %s\n", 
-			$this->chaine, 
-			$this->date,
-			$this->heure, 
-			$this->minutes, 
-			$this->duree, 
-			$this->emission);
 	}
 
 	# répete l'évenement $count fois.
@@ -32,6 +22,8 @@ class EnregistrementRecurrent extends Enregistrement{
 		for ($i=0 ; $i<$count ; ){
 
 			$dt = date('d/m/Y', $tm);
+			
+			# si repeat est vide ou si le jour de la semaine est dans la liste repeat
 			if(in_array($this->week_day_number($dt), $this->repeat) || count($this->repeat)==0){
 				$event = clone($this);
 				$event->date = $dt;

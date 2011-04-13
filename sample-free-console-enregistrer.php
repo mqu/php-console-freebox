@@ -19,21 +19,21 @@ $date = date('d/m/Y');
 
 $enreg = new Enregistrement();
 $enreg->date    = $date;
-$enreg->heure   = 19;
+$enreg->heure   = 23;
 $enreg->minutes = 57;
-$enreg->duree   = 36;
+$enreg->duree   = 5;
 
 # $enreg->repeat   = array(1,2,3);
 
-$enreg->chaine   = 'France 2';   # si PB accent, remplacer par expression reg (ex : 'Public S.*nat')
+$enreg->chaine   = 'France 3';   # si PB accent, remplacer par expression reg (ex : 'Public S.*nat')
 $enreg->qualite  = 'standard';   # auto, standard, bas-débit, auto, TNT, TNT-HD (idem accents).
-$enreg->emission = 'F2 - journal - 20h -test';
+$enreg->emission = 'F2 -test';
 
 # lancer l'enregistrement.
 $magneto->programmer($enreg);
 
 # lister les enregistrements
 foreach($magneto->lister() as $enreg)
-	echo $enreg;
+	echo $enreg . "\n";
 	
 ?>

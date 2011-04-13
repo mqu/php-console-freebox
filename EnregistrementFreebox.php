@@ -53,7 +53,7 @@ class EnregistrementFreebox {
 	}
 
 	public function __toString(){
-		return sprintf("[%d] - %s - %s %d:%d (%dmn) - %s\n", 
+		return sprintf("[%d] - %s - %s %d:%d (%dmn) - %s", 
 			$this->ide, 
 			$this->canal, 
 			$this->date, 

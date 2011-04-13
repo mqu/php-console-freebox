@@ -18,7 +18,7 @@ class Enregistrement {
 	}
 
 	public function __toString(){
-		return sprintf("%s - %s %d:%d (%dmn) - %s\n", 
+		return sprintf("%s - %s %d:%d (%dmn) - %s", 
 			$this->chaine, 
 			$this->date, 
 			$this->heure, 
@@ -28,10 +28,6 @@ class Enregistrement {
 	}
 
     public function __set($name, $value) {
-		if($name == 'chaine'){
-			$this->chaine = $value;
-			return $value;
-		}
         $this->args[$name] = $value;
         return $value;
     }

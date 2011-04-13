@@ -58,6 +58,11 @@ class ConsoleFree{
 	public function idt(){
 		return $this->idt;
 	}
+
+	public function set_from_session($id, $idt){
+		$this->id = $id;
+		$this->idt = $idt;
+	}
 }
 
 ?>

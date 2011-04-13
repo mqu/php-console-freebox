@@ -14,6 +14,6 @@ $magneto = new ConsoleMagneto();
 $magneto->login($config['user'], $config['passwd']);
 
 foreach($magneto->lister() as $enreg)
-	echo $enreg;
+	echo $enreg . "\n";
 
 ?>
