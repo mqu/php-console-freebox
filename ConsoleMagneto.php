@@ -205,11 +205,17 @@ class ConsoleMagneto extends ConsoleFree{
 		} else
 			throw new Exception("Magneto : pas d'info sur les chaines");
 	}
-	
+
+	public function infos_chaines_json(){
+		if(preg_match('#var serv_a = (.*);#', $this->details_url(), $values)){
+			return $values[0];
+		} else
+			throw new Exception("Magneto : pas d'info sur les chaines");
+	}
 	# url : https://adsl.free.fr/admin/magneto.pl?id=XXX&idt=YYYY&detail=1
 	# retourne en format JSON, la listes des chaines, des ID de diffusion par qualité d'enregistrement
 	# un cache permet d'éviter de récupérer en double sur le serveur
-	private function details_url(){
+	public function details_url(){
 		printf("ConsoleMagneto::detail_url()\n");
 		if($this->data['details'] == null){
 			$url = sprintf('https://adsl.free.fr/admin/magneto.pl?id=%s&idt=%s&detail=1', 
