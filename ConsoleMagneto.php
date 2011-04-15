@@ -107,6 +107,10 @@ class ConsoleMagneto extends ConsoleFree{
 
 		$args['submit']  = "PROGRAMMER L'ENREGISTREMENT";
 		
+		# force sur 2 digits.
+		$args['minutes'] = sprintf('%02d', $args['minutes']);
+		$args['heure'] = sprintf('%02d', $args['heure']);
+
 		# si l'enregistrement provient d'un formulaire HTML, chaine et service ont déja la bonne valeur.
 		if($enreg->service != null){
 			$args['chaine'] = $enreg->chaine;
@@ -124,6 +128,7 @@ class ConsoleMagneto extends ConsoleFree{
 			$this->idt());
 
 		$data = $this->curl->post($url, $args);
+		# file_put_contents(sprintf('var/programmer-%s-log.html', time()), $data);
 		$this->check_timeout($data);
 
 		if(preg_match('#Des erreurs sont survenues :#', $data)){
@@ -276,7 +281,7 @@ class ConsoleMagneto extends ConsoleFree{
 	}
 	
 	protected function check_timeout($data){
-		$expr = 'Votre session a expiré';
+		$expr = 'Votre session a expir';
 		if(stripos(utf8_encode($data), $expr)!== false){
 			# file_put_contents(sprintf('var/session-timeout-%s-log.html', time()), $data);
 			throw new SessionException("session timeout");

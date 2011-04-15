@@ -4,6 +4,8 @@
 
 require_once('Cache.php');
 require_once('ConsoleMagneto.php');
+require_once('Enregistrement.php');
+require_once('EnregistrementRecurrent.php');
 
 class Page {
 	protected $params = array(
@@ -12,7 +14,7 @@ class Page {
 	protected $magneto;
 
 	public function __construct(){
-		session_start();
+		@session_start();
 		
 	}
 
@@ -96,12 +98,11 @@ Connexion :
 
 attention : l'interface Web est en cours de développement et pas encore pleinement fonctionnelle. Vous devez attendre encore qq jours pour qu'elle soit stabilisée :
 <ul>
-<li>la fonction programmer est non fonctionnelle,</li>
-<li>la fonction effacer est aussi non fonctionnelle.</li>
+<li>la fonction programmer est fonctionnelle et gère la récurrence :-)</li>
+<li>les conflits d'enregistrements ne sont pas encore gérés</li>
+<li>la fonction effacer est non fonctionnelle (vous pouvez supprimer les enregistrements 1 à 1 depuis la liste).</li>
 </ul>
 <br>
-
-
 
 END;
 	}
@@ -112,10 +113,11 @@ END;
 		foreach($args as $v)
 			$a[$v] = $this->get_arg($v, '');
 
-		$a['date'] = $this->get_arg($v, date('d/m/Y'));
-		$a['heure'] = $this->get_arg($v, date('h'));
-		# $a['minutes'] = 5+$this->get_arg($v, date('i'));
-		$a['minutes'] = 5;
+		$a['date'] = $this->get_arg('date', date('d/m/Y'));
+		$a['heure'] = $this->get_arg('heure', date('h'));
+		$a['minutes'] = 5+$this->get_arg('minute', date('i'));
+		$a['repeat_count'] = $this->get_arg('repeat_count', '');
+
 		$info_chaine = $this->infochaine_json;
 		
 		echo <<<END
@@ -141,16 +143,15 @@ $info_chaine
 <input type="text" name="minutes" value="{$a['minutes']}"> minutes<br>
 <input type="text" name="duree" value="{$a['duree']}"> durée<br>
 <input type="text" name="emission" value="{$a['emission']}"> titre<br>
-<input type="checkbox" name="repeat[]" value="0"> dimanche 
-<input type="checkbox" name="repeat[]" value="1"> lundi 
-<input type="checkbox" name="repeat[]" value="2"> mardi 
-<input type="checkbox" name="repeat[]" value="3"> mercredi 
-<input type="checkbox" name="repeat[]" value="4"> jeudi 
-<input type="checkbox" name="repeat[]" value="5"> vendredi 
-<input type="checkbox" name="repeat[]" value="6"> samedi 
+<input type="checkbox" name="repeat[]" value="0"> dim 
+<input type="checkbox" name="repeat[]" value="1"> lun 
+<input type="checkbox" name="repeat[]" value="2"> mar 
+<input type="checkbox" name="repeat[]" value="3"> mer 
+<input type="checkbox" name="repeat[]" value="4"> jeu 
+<input type="checkbox" name="repeat[]" value="5"> ven 
+<input type="checkbox" name="repeat[]" value="6"> sam 
 <br>
-
- 
+<br>
 <input type="text" name="repeat_count" value="{$a['repeat_count']}"> ocurrences<br>
 <input type="submit" value="valider">
 </form>
@@ -158,6 +159,11 @@ $info_chaine
 
 END;
 	}
+	
+	protected function run_supprimer(){
+		echo "a réaliser ...\n";
+	}
+
 	protected function run_login(){
 
 		unset($_SESSION['id']);
@@ -204,49 +210,38 @@ END;
 		$this->programmer_form();
 		if(!isset($_SESSION['id']))
 			return;
+
 		echo "<pre>\n"; 
-		print_r($_REQUEST);
-		print_r($_SESSION);
-		printf("## id = %s ; idt=%s\n", $this->magneto->id(),$this->magneto->idt());
+		# printf("## id = %s ; idt=%s\n", $this->magneto->id(),$this->magneto->idt());
+		# print_r($_SESSION);
+		# print_r($_REQUEST);
 		
 		if(!isset($_REQUEST['chaine']))
 			return;
 		
-		switch(2){
-			case 1:
-			$enreg = new Enregistrement();
-			$args = array('chaine', 'date', 'heure', 'minutes', 'duree', 'emission', 'qualite');
-			
-			foreach($args as $v){
-				if(!isset($_REQUEST[$v]))
-					continue;
-				$enreg->$v = $_REQUEST[$v];
-				$_SESSION[$v] = $_REQUEST[$v];
+
+		$enreg = new EnregistrementRecurrent();
+		$enreg->date    = $this->get_arg_sess('date');
+		$enreg->heure   = $this->get_arg_sess('heure');
+		$enreg->minutes = $this->get_arg_sess('minutes');
+		$enreg->duree   = $this->get_arg_sess('duree');
+
+		$enreg->chaine   = $this->get_arg_sess('chaine');
+		$enreg->service  = $this->get_arg_sess('service');  
+		$enreg->emission = $this->get_arg_sess('emission');
+
+		$count=$this->get_arg_sess('repeat_count', false);
+		if($count>1){
+			foreach ($enreg->repeat($count) as $event){
+				$this->magneto->programmer($event);
+				echo $event . "\n";
+				flush();
 			}
-
-			$enreg->qualite = 'auto';
-			print_r($enreg);
-			break;
-		
-		case 2:
-			$enreg = new Enregistrement();
-			$enreg->date    = $this->get_arg_sess('date');
-			$enreg->heure   = $this->get_arg_sess('heure');
-			$enreg->minutes = $this->get_arg_sess('minutes');
-			$enreg->duree   = $this->get_arg_sess('duree');
-
-			# $enreg->repeat   = array(1,2,3);
-
-			$enreg->chaine   = $this->get_arg_sess('chaine');
-			$enreg->service   = $this->get_arg_sess('service');  
-			$enreg->emission = $this->get_arg_sess('emission');
-			break;
+			echo "\n$count enregistrements effectués.";
+		} else {
+			$this->magneto->programmer($enreg);
+			echo "enregistrement effectué.";
 		}
-
-		# print_r($this->magneto->infos_chaines());
-		# print_r($this->magneto);
-
-		$this->magneto->programmer($enreg);
 	}
 	
 	protected function run_delete(){

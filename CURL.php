@@ -3,7 +3,7 @@
 /* geany_encoding=ISO-8859-15 */
 
 class CURL {
-	protected $user_agent = 'lynx';
+	protected $user_agent = 'Mozilla/5.0 (X11; U; Linux i686; fr; rv:1.9.2.16) Gecko/20110323 Ubuntu/10.10 (maverick) Firefox/3.6.16';
 
 	function doRequest($method, $url, $vars) {
 		$ch = curl_init();
