@@ -92,6 +92,17 @@ Connexion :
 <input type="submit" value="valider">
 </form>
 
+<br>
+
+attention : l'interface Web est en cours de développement et pas encore pleinement fonctionnelle. Vous devez attendre encore qq jours pour qu'elle soit stabilisée :
+<ul>
+<li>la fonction programmer est non fonctionnelle,</li>
+<li>la fonction effacer est aussi non fonctionnelle.</li>
+</ul>
+<br>
+
+
+
 END;
 	}
 
