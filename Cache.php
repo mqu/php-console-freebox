@@ -5,6 +5,11 @@ class Cache{
 	public function __construct($dir='var/cache'){
 		$this->dir = $dir;
 		
+		if(!file_exists($dir)){
+			$status = mkdir($dir, $mode = 0777, $recursive=true);
+			if($status == false)
+				throw new Exception("Cache: can't create directory ($dir)");
+		}
 		if(!is_writable($dir))
 			throw new Exception("Cache: this directory is not writable ($dir)");
 	}
