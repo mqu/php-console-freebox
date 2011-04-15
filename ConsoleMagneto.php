@@ -278,7 +278,7 @@ class ConsoleMagneto extends ConsoleFree{
 	protected function check_timeout($data){
 		$expr = 'Votre session a expiré';
 		if(stripos(utf8_encode($data), $expr)!== false){
-			file_put_contents(sprintf('var/session-timeout-%s-log.html', time()), $data);
+			# file_put_contents(sprintf('var/session-timeout-%s-log.html', time()), $data);
 			throw new SessionException("session timeout");
 		}
 		return false;
