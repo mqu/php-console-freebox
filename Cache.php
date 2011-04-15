@@ -4,6 +4,9 @@ class Cache{
 	protected $dir;
 	public function __construct($dir='var/cache'){
 		$this->dir = $dir;
+		
+		if(!is_writable($dir))
+			throw new Exception("Cache: this directory is not writable ($dir)");
 	}
 	
 	# cache age in minutes, default 1h
@@ -21,7 +24,7 @@ class Cache{
 		$f = $this->key_to_filename($key);
 		$status = file_put_contents($f, $content);
 		if($status == false)
-			throw new Exception("can't write file cache");
+			throw new Exception("Cache: can't write file cache ($f)");
 	}
 
 	protected function file_age($f){

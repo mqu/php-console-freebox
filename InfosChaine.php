@@ -1,6 +1,8 @@
 <?php
 
-# collection d'Ã©lÃ©ments de type InfosChaine
+/* geany_encoding=ISO-8859-15 */
+
+# collection d'éléments de type InfosChaine
 class InfoList {
 	protected $list = array();
 	
@@ -51,7 +53,7 @@ class InfoList {
 	}
 }
 
-# class d'abstraction des informations liÃ©es aux chaines (id, name, service_id)
+# class d'abstraction des informations liées aux chaines (id, name, service_id)
 class InfosChaine {
 	protected $info;
 	
@@ -74,7 +76,7 @@ class InfosChaine {
 		return $list;
 	}
 	
-	# possible values : auto, standart, TNT, HD.*TNT, HD, bas.*d.*bit (bas dÃ©bit)
+	# possible values : auto, standart, TNT, HD.*TNT, HD, bas.*d.*bit (bas débit)
 	public function service_id($expr = '.*auto.*'){
 		$list = array();
 		foreach($this->info->service as $s){

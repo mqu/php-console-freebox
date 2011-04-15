@@ -1,5 +1,7 @@
 <?php
 
+/* geany_encoding=ISO-8859-15 */
+
 class Date {
 
 	static public function day($time=null){
@@ -108,7 +110,7 @@ class Date {
 
 		$t = ($w - $this_w) * $num_sec + $this_week;
 		
-		# dÃ©calage heure d'Ã©tÃ©
+		# décalage heure d'été
 		if(Date::week_number($t) != $w)
 				$t += 60*60;
 		

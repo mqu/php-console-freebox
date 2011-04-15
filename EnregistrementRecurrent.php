@@ -1,5 +1,7 @@
 <?php
 
+/* geany_encoding=ISO-8859-15 */
+
 require_once('Date.php');
 require_once('Enregistrement.php');
 
@@ -12,8 +14,8 @@ class EnregistrementRecurrent extends Enregistrement{
 		$this->args['repeat'] = array();
 	}
 
-	# rÃ©pete l'Ã©venement $count fois.
-	# tient compte des rÃ©currences sur la semaine ($this->repeat indique les jours d'occurence dans la semaine)
+	# répete l'évenement $count fois.
+	# tient compte des récurrences sur la semaine ($this->repeat indique les jours d'occurence dans la semaine)
 	# ne tient pas compte de $this->repeat si vide.
 	public function repeat($count){
 		$list = array();

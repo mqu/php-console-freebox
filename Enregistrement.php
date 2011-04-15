@@ -1,5 +1,7 @@
 <?php
 
+/* geany_encoding=ISO-8859-15 */
+
 class Enregistrement {
 	protected $args = array(
 		'date'     => null,

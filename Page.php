@@ -1,5 +1,7 @@
 <?php
 
+/* geany_encoding=ISO-8859-15 */
+
 require_once('Cache.php');
 require_once('ConsoleMagneto.php');
 
@@ -66,7 +68,7 @@ END;
 		}
 
 		catch(SessionException $e){
-			printf("une erreur s'est produite : dÃ©connexion (session timeout) ; vous devez vous reconnecter ...<br>\n", $e->getMessage());
+			printf("une erreur s'est produite : déconnexion (session timeout) ; vous devez vous reconnecter ...<br>\n", $e->getMessage());
 			unset($_SESSION['id']);
 			unset($_SESSION['idt']);
 			$this->location('?action=login');
@@ -126,7 +128,7 @@ $info_chaine
 <input type="text" name="date"  value="{$a['date']}"> date<br>
 <input type="text" name="heure" value="{$a['heure']}"> heure<br>
 <input type="text" name="minutes" value="{$a['minutes']}"> minutes<br>
-<input type="text" name="duree" value="{$a['duree']}"> durÃ©e<br>
+<input type="text" name="duree" value="{$a['duree']}"> durée<br>
 <input type="text" name="emission" value="{$a['emission']}"> titre<br>
 <input type="checkbox" name="repeat[]" value="0"> dimanche 
 <input type="checkbox" name="repeat[]" value="1"> lundi 
@@ -165,7 +167,7 @@ END;
 			$this->login_form();
 			echo "erreur de connexion\n";
 		}else{
-			echo "connexion rÃ©ussie ...\n";
+			echo "connexion réussie ...\n";
 			$_SESSION['id'] = $magneto->id();
 			$_SESSION['idt'] = $magneto->idt();
 			$this->location('?action=lister');
@@ -180,7 +182,7 @@ END;
 		$list = $this->magneto->lister();
 		
 		if(count($list) == 0)
-			printf("pas d'enregistrement programmÃ©\n");
+			printf("pas d'enregistrement programmé\n");
 		else foreach($list as $enreg){
 			printf("<li><a href='?action=delete&id=%s'>X</a> - </a>%s</li>\n", $enreg->ide, (string) $enreg);
 		}
@@ -243,7 +245,7 @@ END;
 
 		$status = $this->magneto->supprimer($this->get_arg('id'));
 		if($status)
-			echo "suppression rÃ©ussie\n";
+			echo "suppression réussie\n";
 		else
 			echo "erreur suppression\n";
 		$this->location('?action=lister');

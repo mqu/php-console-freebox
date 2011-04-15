@@ -1,5 +1,7 @@
 <?php
 
+/* geany_encoding=ISO-8859-15 */
+
 require_once('simplehtmldom.php');
 require_once('InfosChaine.php');
 require_once('ConsoleFree.php');
@@ -84,12 +86,12 @@ class ConsoleMagneto extends ConsoleFree{
 /*
  * programmer :	permet de programmer un enregistrement
  * 
-	* spÃ©cifications temporelles : date, durÃ©e, heure, minutes
+	* spécifications temporelles : date, durée, heure, minutes
 	* emission : nom du fichier d'enregistrement,
-	* service : identifiant numÃ©rique spÃ©cifiant le canal de diffusion ; valeur possible $info->chaine('France 2')->service_id('.*auto.*')
+	* service : identifiant numérique spécifiant le canal de diffusion ; valeur possible $info->chaine('France 2')->service_id('.*auto.*')
 	* chaine : identificant de la chaine ; valeur possible $info->chaine('France 2')->id()
 	* where_id : identifiant du media-player (espace de stockage disque)
-	* champs supplÃ©mentaire supposÃ© : 
+	* champs supplémentaire supposé : 
 	*   - repeat_a (liste des jours de la semaine ou l'enregistrement doit avoir lieu
 	*   - sur Freebox V5 : <input type="checkbox" name="period" value="1" id="period_1" -> Lundi
 
@@ -105,7 +107,7 @@ class ConsoleMagneto extends ConsoleFree{
 
 		$args['submit']  = "PROGRAMMER L'ENREGISTREMENT";
 		
-		# si l'enregistrement provient d'un formulaire HTML, chaine et service ont dÃ©ja la bonne valeur.
+		# si l'enregistrement provient d'un formulaire HTML, chaine et service ont déja la bonne valeur.
 		if($enreg->service != null){
 			$args['chaine'] = $enreg->chaine;
 			$args['service'] = $enreg->service;
@@ -137,7 +139,7 @@ class ConsoleMagneto extends ConsoleFree{
 	}
 	
 	# url : https://adsl.free.fr/admin/magneto.pl?id=XXX&idt=YYYY&detail=0&box=0
-	# listes les BOXes : les boitiers multi-media ; il peut y avoir plusieurs boitiers dans le mÃªme domicile
+	# listes les BOXes : les boitiers multi-media ; il peut y avoir plusieurs boitiers dans le même domicile
 	public function liste_boxes(){
 
 		$url = sprintf('https://adsl.free.fr/admin/magneto.pl?id=%s&idt=%s&detail=0&box=%s', 
@@ -179,8 +181,8 @@ class ConsoleMagneto extends ConsoleFree{
 			throw new Exception("Magneto : pas d'info sur l'espace disque");
 	}
 	
-	# listes des chaines supportÃ©es.
-	# les caractÃ¨res accentuÃ©s posent problÃ¨me et sont mal dÃ©codÃ©s. Il est possible de les remplacer par des expression rÃ©guliÃ¨re (.*)
+	# listes des chaines supportées.
+	# les caractères accentués posent problème et sont mal décodés. Il est possible de les remplacer par des expression régulière (.*)
 	#
 	public function infos_chaines(){
 		
@@ -191,7 +193,7 @@ class ConsoleMagneto extends ConsoleFree{
 		if(preg_match('#var serv_a = (.*);#', $this->details_url(), $values)){
 			$infos = json_decode(utf8_decode($values[1]));
 			if($infos === NULL)
-				throw new Exception(sprintf("Magneto : erreur dÃ©codage infos chaines (%d)", json_last_error()));
+				throw new Exception(sprintf("Magneto : erreur décodage infos chaines (%d)", json_last_error()));
 
 			$list = new InfoList();
 
@@ -213,8 +215,8 @@ class ConsoleMagneto extends ConsoleFree{
 			throw new Exception("Magneto : pas d'info sur les chaines");
 	}
 	# url : https://adsl.free.fr/admin/magneto.pl?id=XXX&idt=YYYY&detail=1
-	# retourne en format JSON, la listes des chaines, des ID de diffusion par qualitÃ© d'enregistrement
-	# un cache permet d'Ã©viter de rÃ©cupÃ©rer en double sur le serveur
+	# retourne en format JSON, la listes des chaines, des ID de diffusion par qualité d'enregistrement
+	# un cache permet d'éviter de récupérer en double sur le serveur
 	public function details_url(){
 		printf("ConsoleMagneto::detail_url()\n");
 		if($this->data['details'] == null){
@@ -231,7 +233,7 @@ class ConsoleMagneto extends ConsoleFree{
 	}
 
 	/* 
-		- suppression d'un enregistrement programmÃ©
+		- suppression d'un enregistrement programmé
 	*/
 
 	public function supprimer($id){
@@ -254,7 +256,7 @@ class ConsoleMagneto extends ConsoleFree{
 	}
 	
 	/*
-	 * suppression d'enregistrements ; basÃ© sur une expression rÃ©guliÃ¨re : 
+	 * suppression d'enregistrements ; basé sur une expression régulière : 
 	 *  ex: expr = .*test.*
 	 *
 	 */
@@ -274,7 +276,7 @@ class ConsoleMagneto extends ConsoleFree{
 	}
 	
 	protected function check_timeout($data){
-		$expr = 'Votre session a expirÃ©';
+		$expr = 'Votre session a expiré';
 		if(stripos(utf8_encode($data), $expr)!== false){
 			file_put_contents(sprintf('var/session-timeout-%s-log.html', time()), $data);
 			throw new SessionException("session timeout");

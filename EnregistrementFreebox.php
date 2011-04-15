@@ -1,9 +1,10 @@
 <?php
 
+/* geany_encoding=ISO-8859-15 */
 
 /*
 
-	classe utilisÃ©e comme container lors de la liste des enregistrements de la freebox.
+	classe utilisée comme container lors de la liste des enregistrements de la freebox.
 
 	forme :
 	Array
@@ -42,7 +43,7 @@
 
 		
 		[where_id] => 2  ; espace de stockage
-		[repeat_a] =>    ; non utilisÃ© actuellement.
+		[repeat_a] =>    ; non utilisé actuellement.
 	)
 */
 

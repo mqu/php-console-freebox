@@ -1,5 +1,7 @@
 <?php
 
+/* geany_encoding=ISO-8859-15 */
+
 class CURL {
 	protected $user_agent = 'lynx';
 
