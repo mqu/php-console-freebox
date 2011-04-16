@@ -35,10 +35,11 @@ foreach($args as $id){
 		$magneto->supprimer_expr($id);
 	else
 		$magneto->supprimer($id);
+	printf("supprimé : %d\n", $id);
 }
 
 foreach($magneto->lister() as $enreg)
-	echo $enreg;
+	echo $enreg . "\n";
 
 
 ?>
