@@ -102,6 +102,17 @@ attention : l'interface Web est en cours de développement et pas encore pleineme
 <li>les conflits d'enregistrements ne sont pas encore gérés</li>
 <li>la fonction effacer est non fonctionnelle (vous pouvez supprimer les enregistrements 1 à 1 depuis la liste).</li>
 </ul>
+
+<b>liens</b>
+<ul>
+<li><a href="https://github.com/mqu/php-console-freebox/wiki">aide</a> en ligne</li>
+<li>déposer et suivre les <a href="https://github.com/mqu/php-console-freebox/issues">BUGs</a></li>
+</ul>
+
+<b>infos de version</b>
+<ul>
+<li>vous utilisez la version 0.1 + qq petits correctifs</li>
+</ul>
 <br>
 
 END;
