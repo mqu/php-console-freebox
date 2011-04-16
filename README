@@ -14,8 +14,11 @@ Installation initiale :
  sudo apt-get install git php5-cli php5-curl
 
 Utilisation :
- # récupérer les sources avec la commande git :
+ # récupérer les sources avec la commande git (version de développement ; assez instable) :
 git clone http://github.com/mqu/php-console-freebox.git
+
+# récupérer une version "tagué" : 
+mkdir php-console-freebox ; git clone http://github.com/mqu/php-console-freebox.git 0.1
 
  # se placer dans le répertoire source :
  cd php-console-freebox
