@@ -115,7 +115,7 @@ END;
 
 		$a['date'] = $this->get_arg('date', date('d/m/Y'));
 		$a['heure'] = $this->get_arg('heure', date('h'));
-		$a['minutes'] = 5+$this->get_arg('minute', date('i'));
+		$a['minutes'] = min(59, 5+$this->get_arg('minute', date('i')));
 		$a['repeat_count'] = $this->get_arg('repeat_count', '');
 
 		$info_chaine = $this->infochaine_json;
@@ -230,6 +230,9 @@ END;
 		$enreg->service  = $this->get_arg_sess('service');  
 		$enreg->emission = $this->get_arg_sess('emission');
 
+
+		# gestion de la récurrence :
+		$enreg->repeat = $this->get_arg_sess('repeat', array());
 		$count=$this->get_arg_sess('repeat_count', false);
 		if($count>1){
 			foreach ($enreg->repeat($count) as $event){
