@@ -84,7 +84,7 @@ END;
 	
 	protected function login_form(){
 		
-		$login = $this->get_arg('login', '');
+		$login = $this->get_arg_sess('login', '');
 		echo <<<END
 		
 Connexion : 
@@ -170,9 +170,32 @@ $info_chaine
 
 END;
 	}
-	
+
+	protected function form_supprimer(){
+		
+		$expr = $this->get_arg_sess('expr', '');
+		echo <<<END
+		
+Supprimer : 
+<form method="post" action="?action=supprimer">
+<input type="hidden" name="doit" value="true">
+<input type="text" name="expr" value="$expr"> expression portant sur le titre<br>
+<i>expression (*test*, *France 2* ; * est le caractère générique ; tout supprimer : '*')</i><br>
+<input type="submit" value="valider">
+</form>
+
+END;
+	}
+
 	protected function run_supprimer(){
-		echo "a réaliser ...\n";
+		$this->form_supprimer();
+		if($this->get_arg('doit', false) == 'true'){
+			$expr = $this->get_arg('expr');
+			$expr = str_replace('*', '.*', $expr);
+			$this->magneto->supprimer_expr($expr);
+		}
+		echo "<br>\n";
+		$this->run_lister();
 	}
 
 	protected function run_login(){
@@ -210,7 +233,7 @@ END;
 		$list = $this->magneto->lister();
 		
 		if(count($list) == 0)
-			printf("pas d'enregistrement programmé\n");
+			printf("pas (plus) d'enregistrement programmé\n");
 		else foreach($list as $enreg){
 			printf("<li><a href='?action=delete&id=%s'>X</a> - </a>%s</li>\n", $enreg->ide, (string) $enreg);
 		}

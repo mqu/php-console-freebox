@@ -54,13 +54,13 @@ class EnregistrementFreebox {
 	}
 
 	public function __toString(){
-		return sprintf("[%d] - %s - %s %d:%d (%dmn) - %s", 
+		return sprintf("[%d] - %s %02d:%02d (%2dmn) - %s - \"%s\"", 
 			$this->ide, 
-			$this->canal, 
 			$this->date, 
 			$this->heure, 
 			$this->min, 
 			$this->duree, 
+			$this->canal, 
 			$this->nom);
 	}
 	
