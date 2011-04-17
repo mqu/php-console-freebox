@@ -42,7 +42,7 @@ class CURL {
 	
 	protected function is_safe_mode(){
 		if(ini_get('safe_mode')===true)    return true;
-		if(ini_get('open_basedir')===true) return true;
+		if(ini_get('open_basedir') !== '') return true;
 		return false;
 	}
 }

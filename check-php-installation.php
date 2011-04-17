@@ -6,7 +6,7 @@ function myphpinfo(){
 	printf("# phpversion : %s\n", phpversion());
 	printf("# uname : %s\n", php_uname());
 	printf("# php:ini:safe_mode : %s\n", ini_get('safe_mode')==0?"false":"true");
-	printf("# php:ini:open_basedir : %s\n", ini_get('open_basedir'));
+	printf("# php:ini:open_basedir : '%s'\n", ini_get('open_basedir'));
 	
 }
 
