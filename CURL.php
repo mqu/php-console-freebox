@@ -10,14 +10,15 @@ class CURL {
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_HEADER, 1);
 		curl_setopt($ch, CURLOPT_USERAGENT, $this->user_agent);
-		if(ini_get('safe_mode')!=true) curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
 		# curl_setopt($ch, CURLOPT_VERBOSE, true); verbose mode
-
-		if(ini_get('safe_mode')!=true) curl_setopt($ch, CURLOPT_COOKIEJAR, 'cookie.txt');
-		if(ini_get('safe_mode')!=true) curl_setopt($ch, CURLOPT_COOKIEFILE, 'cookie.txt');
-
+		if(!$this->is_safe_mode()){
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+			curl_setopt($ch, CURLOPT_COOKIEJAR, 'cookie.txt');
+			curl_setopt($ch, CURLOPT_COOKIEFILE, 'cookie.txt');
+		}
+	
 		if ($method == 'POST') {
 			curl_setopt($ch, CURLOPT_POST, 1);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $vars);
@@ -37,6 +38,12 @@ class CURL {
 	
 	public function post($url, $vars) {
 		return $this->doRequest('POST', $url, $vars);
+	}
+	
+	protected function is_safe_mode(){
+		if(ini_get('safe_mode')===true)    return true;
+		if(ini_get('open_basedir')===true) return true;
+		return false;
 	}
 }
 
