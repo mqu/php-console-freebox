@@ -110,7 +110,7 @@ attention : l'interface Web est en cours de développement et pas encore pleineme
 
 <b>infos de version</b>
 <ul>
-<li>vous utilisez la version 0.1 + qq petits correctifs</li>
+<li>vous utilisez la version 0.2 + qq petits correctifs</li>
 </ul>
 <br>
 
