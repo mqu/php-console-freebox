@@ -511,7 +511,7 @@ class simple_html_dom {
 
     function __construct($str=null) {
         if ($str) {
-            if (preg_match("/^http:\/\//i",$str) || is_file($str))
+            if (preg_match("/^http:\/\//i",$str) || @is_file($str))
                 $this->load_file($str);
             else
                 $this->load($str);
