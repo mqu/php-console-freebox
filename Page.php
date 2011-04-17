@@ -100,7 +100,6 @@ attention : l'interface Web est en cours de développement et pas encore pleineme
 <ul>
 <li>la fonction programmer est fonctionnelle et gère la récurrence :-)</li>
 <li>les conflits d'enregistrements ne sont pas encore gérés</li>
-<li>la fonction effacer est non fonctionnelle (vous pouvez supprimer les enregistrements 1 à 1 depuis la liste).</li>
 </ul>
 
 <b>liens</b>
