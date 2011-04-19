@@ -26,7 +26,9 @@ class Page {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>enregistrement freebox</title>
+	<meta name="keywords" content="enregistrement, freebox, révolution, freebox révolution, free.fr, programmation, récurrent, magneto, magnetoscope-numerique, console freebox" />
+	<meta name="description" content="programmation d'enregistrement sur la freebox révolution" />
+	<title>enregistrement récurent freebox révolution</title>
 	<script type="text/javascript" src="js/jquery-mini.js"></script>
 	<script type="text/javascript" src="js/magneto.js"></script>
 </head>
