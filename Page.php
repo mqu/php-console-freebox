@@ -51,9 +51,10 @@ END;
 		try{
 			$action = $this->get_arg('action', false);
 			
-			if($action == false)
+			if($action == false){
+				echo "ce site vous permet de programmer des enregistrements récurrents ; veuillez vous connecter (<a href='?action=login'>login</a>)<br>\n";
 				return false;
-
+			}
 			if($action != 'login' && isset($_SESSION['id'])){
 				$this->magneto = new ConsoleMagneto();
 				$this->magneto->set_from_session($_SESSION['id'], $_SESSION['idt']);
