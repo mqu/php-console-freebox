@@ -61,7 +61,7 @@ END;
 				
 				$cache = new Cache();
 				$key = 'info-chain-json';
-				$this->infochaine_json = $cache->get($key, 60*24);
+				$this->infochaine_json = $cache->get($key, 60*2);
 				if($this->infochaine_json == false){
 					$this->infochaine_json = $this->magneto->infos_chaines_json();
 					$cache->put($key, $this->infochaine_json);
