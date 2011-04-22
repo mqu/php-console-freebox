@@ -45,8 +45,8 @@ END;
 	public function run(){
 
 		# does not work as expected.
-		# if(!$this->is_ssl())
-		#	header(sprintf("Location: %s", $this->my_url()));
+		if(!$this->is_ssl())
+			header(sprintf("Location: %s", $this->my_uri()));
 
 		$this->header();
 
@@ -57,8 +57,7 @@ END;
 			
 			if($action == false){
 				echo "ce site vous permet de programmer des enregistrements récurrents ; veuillez vous connecter (<a href='?action=login'>login</a>) ...<br>\n";
-				# $this->location('?action=login', 3);
-				$this->location($this->my_url() . '?action=login', 3);
+				$this->location('?action=login', 3);
 				return false;
 			}
 			if($action != 'login' && isset($_SESSION['id'])){
@@ -296,10 +295,10 @@ END;
 
 		$status = $this->magneto->supprimer($this->get_arg('id'));
 		if($status)
-			echo "suppression réussie\n";
+			echo "suppression réussie ...\n";
 		else
 			echo "erreur suppression\n";
-		$this->location('?action=lister');
+		$this->location('?action=lister', 2);
 	}
 
 	public function menu(){
@@ -335,8 +334,12 @@ END;
 		return sprintf('%s://%s%s/', $proto, $_SERVER['HTTP_HOST'], rtrim(dirname($_SERVER['PHP_SELF']), '/\\'));
 	}
 	
+	protected function my_uri($proto='https'){
+		return sprintf('%s://%s%s', $proto, $_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']);
+	}
+	
 	protected function is_ssl(){
-		if($_SERVER['HTTPS'] == 'on')
+		if(isset($_SERVER['HTTPS']))
 			return true;
 		return false;
 	}
