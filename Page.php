@@ -44,6 +44,9 @@ END;
 
 	public function run(){
 
+		if(!$this->is_ssl())
+			header(sprintf("Location: %s", $this->my_url()));
+
 		$this->header();
 
 		$this->menu();
@@ -52,7 +55,9 @@ END;
 			$action = $this->get_arg('action', false);
 			
 			if($action == false){
-				echo "ce site vous permet de programmer des enregistrements récurrents ; veuillez vous connecter (<a href='?action=login'>login</a>)<br>\n";
+				echo "ce site vous permet de programmer des enregistrements récurrents ; veuillez vous connecter (<a href='?action=login'>login</a>) ...<br>\n";
+				# $this->location('?action=login', 3);
+				$this->location($this->my_url() . '?action=login', 3);
 				return false;
 			}
 			if($action != 'login' && isset($_SESSION['id'])){
@@ -325,11 +330,25 @@ END;
 		return $default;
 	}
 	
+	protected function my_url($proto='https'){
+		return sprintf('%s://%s%s/', $proto, $_SERVER['HTTP_HOST'], rtrim(dirname($_SERVER['PHP_SELF']), '/\\'));
+	}
+	
+	protected function is_ssl(){
+		if($_SERVER['HTTPS'] == 'on')
+			return true;
+		return false;
+	}
+
 	protected function location($page, $delai = 4){
 		$host  = $_SERVER['HTTP_HOST'];
 		$uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
 		# header("Location: http://$host$uri/$page");
-		$url = sprintf("http://$host$uri/$page");
+		
+		if(!preg_match('#http.\:#', $page))
+			$url = sprintf("http://$host$uri/$page");
+		else
+			$url = $page;
 		printf('<script type="text/javascript">new_loc_timeout("%s", %s);</script>', $url, $delai*1000);
 		echo "\n";
 		flush();
