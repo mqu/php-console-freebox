@@ -44,8 +44,9 @@ END;
 
 	public function run(){
 
-		if(!$this->is_ssl())
-			header(sprintf("Location: %s", $this->my_url()));
+		# does not work as expected.
+		# if(!$this->is_ssl())
+		#	header(sprintf("Location: %s", $this->my_url()));
 
 		$this->header();
 
@@ -345,7 +346,7 @@ END;
 		$uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
 		# header("Location: http://$host$uri/$page");
 		
-		if(!preg_match('#http.\:#', $page))
+		if(!preg_match('#http.\:.*#', $page))
 			$url = sprintf("http://$host$uri/$page");
 		else
 			$url = $page;
