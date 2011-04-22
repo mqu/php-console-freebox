@@ -76,7 +76,7 @@ END;
 			printf("une erreur s'est produite : déconnexion (session timeout) ; vous devez vous reconnecter ...<br>\n", $e->getMessage());
 			unset($_SESSION['id']);
 			unset($_SESSION['idt']);
-			$this->location('?action=login');
+			$this->location('?action=login', 4);
 		}
 		catch(Exception $e){
 			printf("une erreur s'est produite : %s<br>\n", $e->getMessage());
@@ -223,7 +223,7 @@ END;
 			echo "connexion réussie ...\n";
 			$_SESSION['id'] = $magneto->id();
 			$_SESSION['idt'] = $magneto->idt();
-			$this->location('?action=lister');
+			$this->location('?action=lister', 2);
 		}
 	}
 
@@ -326,13 +326,11 @@ END;
 	}
 	
 	protected function location($page, $delai = 4){
-		flush();
-		sleep($delai);
 		$host  = $_SERVER['HTTP_HOST'];
 		$uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
 		# header("Location: http://$host$uri/$page");
 		$url = sprintf("http://$host$uri/$page");
-		printf('<script type="text/javascript">location("%s");</script>', $url);
+		printf('<script type="text/javascript">new_loc_timeout("%s", %s);</script>', $url, $delai*1000);
 		echo "\n";
 		flush();
 	}

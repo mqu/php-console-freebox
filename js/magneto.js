@@ -46,3 +46,14 @@ function selectChaines(){
 	  selectService(0);
  
 }
+
+function new_loc(url) {
+	document.location.replace(url);
+}
+
+function new_loc_timeout(url, timeout) {
+	setTimeout(function ()
+	 {
+	   document.location.replace(url);
+     }, timeout);
+}
